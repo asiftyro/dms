@@ -1,0 +1,19 @@
+{% from "bootstrap/utils.html" import render_messages %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% extends "base.html" %}
+{% block title %}404{% endblock %}
+{% block body %}
+<div class="common-header">
+    {{ render_messages(dismissible=True) }}
+</div>
+<hr>
+<div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+        <span class="display-1 d-block">404</span>
+        <div class="mb-4 lead">The content you are looking for was not found.</div>
+        <a href="{{url_for('home.homepage')}}" class="btn btn-link">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
+
+

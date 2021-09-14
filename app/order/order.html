@@ -1,0 +1,131 @@
+{% from "bootstrap/utils.html" import render_messages %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% from 'bootstrap/table.html' import render_table %}
+{% extends "base.html" %}
+
+{% block title %}Order{% endblock %}
+
+{% block body %}
+<div class="content-section">
+
+    <div class="common-header">
+        <h3>{{title}}</h3>
+        {{ render_messages(dismissible=True) }}
+    </div>
+    <hr>
+
+
+    {% if view == 'all' %}
+        <div>
+            <a href="{{ url_for('order.add_order') }}" class="btn btn-success btn-sm" role="button" aria-pressed="true">
+                Add New Order
+            </a>
+        </div>
+        <hr>
+        {% if data %}
+        {{
+            render_table(
+                data,
+                responsive=True,
+                table_classes='table-sm table-striped table-bordered table-hover',
+                show_actions=True,
+                model=model,
+                view_url=('order.view_order', [('order_id', ':id')]),
+                edit_url=('order.edit_order', [('order_id', ':id')]),
+                titles=[('id', 'Order ID'), ('description', 'Description'),
+                        ('address', 'Address'), ('status', 'Order Status'),
+                        ('payment_status', 'Payment Status')
+                        ]
+            )
+        }}
+        {% endif %}
+        <code>
+            <!-- TODO:-->
+            Todo:
+            <br>
+            <del>A table with action buttons to cancel or edit and view details</del>
+            <br>
+            Pagination
+            <br>
+            Search and filters
+            <br>
+            Export
+            <br>
+            <del>Option to add new</del>
+        </code>
+    {% endif %}
+
+
+    {% if view == 'single' %}
+        <div>
+            <a href="{{ url_for('order.edit_order', order_id=data.id) }}" class="btn btn-warning btn-sm" role="button" aria-pressed="true">
+                Edit this Order
+            </a>
+
+            <form style="display:inline" action="{{ url_for('order.cancel_order', order_id=data.id) }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to Cancel?')">Cancel this Order</button>
+            </form>
+
+            <a href="{{ url_for('order.view_order') }}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">
+                View All Orders
+            </a>
+        </div>
+        <hr>
+        <div>
+            <dl class="row">
+                <dt class="col-sm-3">Order ID</dt>
+                <dd class="col-sm-9">{{data.id}}</dd>
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">{{data.description}}</dd>
+
+                <dt class="col-sm-3">Address</dt>
+                <dd class="col-sm-9">{{data.address}}</dd>
+                <dt class="col-sm-3">Payment Status</dt>
+                <dd class="col-sm-9">{{data.payment_status}}</dd>
+                <dt class="col-sm-3">Order Status</dt>
+                <dd class="col-sm-9">{{data.status}}</dd>
+            </dl>
+        </div>
+    {% endif %}
+<!--    Section: Add -->
+    {% if view == 'add' %}
+        <div>
+            <a href="{{ url_for('order.view_order') }}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">
+                Cancel Adding New Order
+            </a>
+        </div>
+        <hr>
+        {% if form %}
+            <div>
+                {{ render_form(form, form_type='horizontal', horizontal_columns=('lg', 1, 6)) }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+
+    {% if view == 'edit' %}
+        <div>
+            <a href="{{ url_for('order.view_order', order_id=data.id) }}"
+               class="btn btn-warning btn-sm" role="button" aria-pressed="true">
+                Cancel Editing this Order
+            </a>
+
+            <form style="display:inline" action="{{ url_for('order.cancel_order', order_id=data.id) }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to Cancel?')">Cancel this Order</button>
+            </form>
+
+            <a href="{{ url_for('order.view_order') }}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">
+                View All Orders
+            </a>
+        </div>
+        <hr>
+        {% if form %}
+            <div>
+                {{ render_form(form, form_type='horizontal', horizontal_columns=('lg', 1, 6)) }}
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

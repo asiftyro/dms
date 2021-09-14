@@ -1,0 +1,30 @@
+# venv
+env
+venv
+dms-venv/
+
+# server credentials
+instance/config.py
+
+# byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# tests and coverage
+*.pytest_cache
+.coverage
+
+# database & logs
+*.db
+*.sqlite3
+*.log
+
+# other
+.DS_Store
+
+htmlcov/
+dist/
+build/
+*.egg-info/
+.idea
+.run

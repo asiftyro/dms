@@ -1,0 +1,18 @@
+"""
+Rename config.py.sample.txt to config.py
+ONLY modify the CAPITALIZED_SNAKE_CASE_VARIABLES
+"""
+
+db_conn_str_factory = "mysql+mysqlconnector://{username}:{password}@{server}/{database}"
+
+SECRET_KEY = 'long-random-bytes-or-string-WQ4eLofgRdb_sTJK7CytbNJnNvtDF9MR'
+
+SQLALCHEMY_DATABASE_URI = db_conn_str_factory.format(
+    username='dbuser',
+    password='dbpassword',
+    server='localhost',
+    database='dbname',
+)
+
+RECAPTCHA_PUBLIC_KEY = "RecaptchSiteKeyFromGoogle"
+RECAPTCHA_PRIVATE_KEY = "RecaptchSecretKeyFromGoogle"
