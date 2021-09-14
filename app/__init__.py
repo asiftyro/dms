@@ -7,12 +7,16 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
+from flask_mail import Mail, Message
+from flask_executor import Executor
 
 # local imports
 from config import app_config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+mail = Mail()
+executor = Executor()
 
 
 def error_404(e):
@@ -38,6 +42,8 @@ def create_app(config_name):
     CSRFProtect(app)
     Migrate(app, db)
     Bootstrap(app)
+    mail.init_app(app)
+    executor.init_app(app)
     login_manager.init_app(app)
     login_manager.login_message = "You must be logged in to access this page."
     login_manager.login_view = "auth.login"

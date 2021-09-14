@@ -8,9 +8,15 @@ class Config(object):
     SOFTWARE_VERSION = "b1.0"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    BOOTSTRAP_SERVE_LOCAL = True
+
     WTF_CSRF_ENABLED = True
+
+    BOOTSTRAP_SERVE_LOCAL = True
+
     RECAPTCHA_DATA_ATTRS = {'theme': 'white'}  # 'red' | 'white' | 'blackglass' | 'clean' | 'custom'
+
+    EXECUTOR_TYPE = "thread"  # or, process
+    EXECUTOR_MAX_WORKERS = 5
 
 
 class DevelopmentConfig(Config):

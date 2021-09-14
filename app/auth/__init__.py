@@ -5,6 +5,7 @@ import functools
 from .form import LoginForm, RegistrationForm
 from ..models import User, UserType, Merchant
 from app import db
+from ..utils import send_async_email
 
 auth = Blueprint('auth', __name__, template_folder='')
 
@@ -35,7 +36,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
-            if user.is_active():   # todo: add email_confirmed clause
+            if user.is_active():  # todo: add email_confirmed clause
                 login_user(user)
                 flash('Login Succesful. Welcome!', 'success')
                 return redirect(url_for('order.view_order'))  # todo: redicrect at different endpoint based on user type
@@ -72,6 +73,15 @@ def register():
 
         db.session.add(user_obj)
         db.session.commit()
+
+        # TODO: Send mail
+        # send_async_email(
+        #     user_obj.email,
+        #     'Activate your Ural Account.',
+        #     'Welcome! Please copy the following link and paste it to your browser address bar, then press enter. {'
+        #     'activation_link}'.format(activation_link=''),
+        #     '<b>My HTML message</b>')
+
         flash('You have successfully registered! You may now login.')
 
         # redirect to the login page
@@ -79,3 +89,21 @@ def register():
 
     # load registration template
     return render_template('auth.html', form=form, title='Register', view="register")
+
+
+# TODO: @auth.route('/verify-email', methods=['GET'])
+@auth.route('/verify-email', methods=['GET'])
+def verify_email():
+    return 'verify email page'
+
+
+# TODO: @auth.route('/reset-password', methods=['GET', 'POST'])
+@auth.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    return 'reset password page page'
+
+
+# TODO: @auth.route('/reset/<token>', methods=["GET", "POST"])
+@auth.route('/reset/<token>', methods=["GET", "POST"])
+def reset_pass_with_token(token):
+    pass
