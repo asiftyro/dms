@@ -22,10 +22,10 @@ def login():
                        "your account. "
                 flash(fmsg, 'danger')
                 return redirect(url_for('auth.login'))
-            if user.is_active():  # todo: add email_confirmed clause
+            if user.is_active():
                 login_user(user)
                 flash('Login Succesful. Welcome!', 'success')
-                return redirect(url_for('order.view_order'))  # todo: redicrect at different endpoint based on user type
+                return redirect(url_for('home.homepage'))
             else:
                 flash("Account is not active. Contact Administrator", "danger")
         else:
@@ -62,7 +62,7 @@ def register():
         db.session.commit()
         token = get_email_token(email=user_obj.email)
         confirm_url = url_for('auth.verify_email', token=token, _external=True)
-        subject = "Activate your Ural Account."
+        subject = "Activate your Ural account."
         html = render_template('email_templates/activate-account.html', confirm_url=confirm_url)
         txt = "Your account was successfully created. Please click the link below to confirm your email address and " \
               "activate your account: {link}".format(link=confirm_url)
@@ -73,7 +73,6 @@ def register():
     return render_template('auth.html', form=reg_form, title='Register', view="register")
 
 
-# TODO: @auth.route('/verify-email', methods=['GET'])
 @auth.route('/verify-email/<token>', methods=['GET'])
 def verify_email(token):
     try:
@@ -95,10 +94,10 @@ def verify_email(token):
 # TODO: @auth.route('/reset-password', methods=['GET', 'POST'])
 @auth.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
-    return 'reset password page page'
+    return 'reset password page'
 
 
 # TODO: @auth.route('/reset/<token>', methods=["GET", "POST"])
 @auth.route('/reset/<token>', methods=["GET", "POST"])
 def reset_pass_with_token(token):
-    pass
+    return 'reset password page'
