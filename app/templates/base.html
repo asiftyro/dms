@@ -33,7 +33,7 @@
                 </li>
 
                 {% if current_user.is_authenticated %}
-                    {% if current_user.user_type|string() in ['UserType.MERCHANT_OWNER', 'UserType.MERCHANT_USER'] %}
+                    {% if current_user.role|string() in ['Role.MERCHANT_OWNER', 'Role.MERCHANT_USER'] %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('profile.view_profile') }}">Profile</a>
                         </li>
@@ -82,7 +82,7 @@
     <div class="container">
         <span class="text-muted">&copy;&nbsp;2021&nbsp;uira.io</span>
         {% if current_user.is_authenticated %}
-        <span class="text-muted float-right">Logged in: {{current_user.email}} | {{current_user.user_type|string()}}</span>
+        <span class="text-muted float-right">Logged in: {{current_user.email}} | {{current_user.role|string()}}</span>
         {% endif %}
     </div>
 </footer>

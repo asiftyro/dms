@@ -7,7 +7,7 @@ from app import db, login_manager
 from enum import Enum
 
 
-class UserType(Enum):
+class Role(Enum):
     """
     Type of users
     """
@@ -18,8 +18,8 @@ class UserType(Enum):
     ADMIN_USER = 5
 
 
-MERCHANT_USER_TYPES = [UserType.MERCHANT_OWNER, UserType.MERCHANT_USER]
-ADMIN_USER_TYPES = [UserType.ADMIN_USER, UserType.ADMIN_MANAGER, UserType.ADMIN_SUPER]
+MERCHANT_ROLES = [Role.MERCHANT_OWNER, Role.MERCHANT_USER]
+ADMIN_ROLES = [Role.ADMIN_USER, Role.ADMIN_MANAGER, Role.ADMIN_SUPER]
 
 
 class OrderStatus(Enum):
@@ -56,8 +56,10 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(60), index=True)
     password_hash = db.Column(db.String(128))
     merchant_id = db.Column(db.Integer, nullable=False)
-    user_type = db.Column(db.Enum(UserType), nullable=False, default=UserType.MERCHANT_OWNER)
+    role = db.Column(db.Enum(Role), nullable=False, default=Role.MERCHANT_OWNER)
     active = db.Column(db.Boolean(), nullable=False, default=True)
+    # todo: set email_confirmed default to Fale
+    email_confirmed=db.Column(db.Boolean(), nullable=False, default=True)
 
     # is_admin = db.Column(db.Boolean, default=False)
 
@@ -84,8 +86,14 @@ class User(UserMixin, db.Model):
     def is_active(self):
         return self.active
 
+    def is_email_confirmed(self):
+        return self.email_confirmed
+
     def is_merchant(self):
-        return self.user_type in [UserType.MERCHANT_OWNER, UserType.MERCHANT_USER]
+        return self.role in MERCHANT_ROLES
+
+    def is_admin(self):
+        return self.role in ADMIN_ROLES
 
     def __repr__(self):
         return '<User: {}>'.format(self.id)

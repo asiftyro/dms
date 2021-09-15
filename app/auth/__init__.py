@@ -1,11 +1,11 @@
-from flask import Blueprint, flash, redirect, render_template, url_for, abort
+from flask import Blueprint, flash, redirect, render_template, url_for, current_app, abort
 from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
 from .form import LoginForm, RegistrationForm
-from ..models import User, UserType, Merchant
+from ..models import User, Role, Merchant
 from .roles import merchant_required, admin_required, role_required
-from ..utils import send_async_email
+from ..utils import send_async_email, get_email_token, check_email_token
 
 auth = Blueprint('auth', __name__, template_folder='')
 
@@ -13,13 +13,15 @@ auth = Blueprint('auth', __name__, template_folder='')
 @auth.route('/login', methods=['GET', 'POST'])
 @role_required(role=None)
 def login():
-
-
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user is not None and user.verify_password(form.password.data):
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        user = User.query.filter_by(email=login_form.email.data).first()
+        if user is not None and user.verify_password(login_form.password.data):
+            if not user.is_email_confirmed():
+                fmsg = "Your account is not active. Please click the activation link sent to your email to activate " \
+                       "your account. "
+                flash(fmsg, 'danger')
+                return redirect(url_for('auth.login'))
             if user.is_active():  # todo: add email_confirmed clause
                 login_user(user)
                 flash('Login Succesful. Welcome!', 'success')
@@ -28,7 +30,7 @@ def login():
                 flash("Account is not active. Contact Administrator", "danger")
         else:
             flash('Invalid email or password.', 'danger')
-    return render_template('auth.html', form=form, title="Login", view="login")
+    return render_template('auth.html', form=login_form, title="Login", view="login")
 
 
 @auth.route('/logout', methods=['GET'])
@@ -42,44 +44,52 @@ def logout():
 @auth.route('/register', methods=['GET', 'POST'])
 @role_required(role=None)
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
+    reg_form = RegistrationForm()
+    if reg_form.validate_on_submit():
         merchant = Merchant()
         db.session.add(merchant)
         db.session.flush()
         user_obj = User(
-            email=form.email.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            password=form.password.data,
+            email=reg_form.email.data,
+            first_name=reg_form.first_name.data,
+            last_name=reg_form.last_name.data,
+            password=reg_form.password.data,
             merchant_id=merchant.id,
-            user_type=UserType.MERCHANT_OWNER,
+            role=Role.MERCHANT_OWNER,
         )
 
         db.session.add(user_obj)
         db.session.commit()
-
-        # TODO: Send mail
-        # send_async_email(
-        #     user_obj.email,
-        #     'Activate your Ural Account.',
-        #     'Welcome! Please copy the following link and paste it to your browser address bar, then press enter. {'
-        #     'activation_link}'.format(activation_link=''),
-        #     '<b>My HTML message</b>')
-
-        flash('You have successfully registered! You may now login.')
-
-        # redirect to the login page
+        token = get_email_token(email=user_obj.email)
+        confirm_url = url_for('auth.verify_email', token=token, _external=True)
+        subject = "Activate your Ural Account."
+        html = render_template('email_templates/activate-account.html', confirm_url=confirm_url)
+        txt = "Your account was successfully created. Please click the link below to confirm your email address and " \
+              "activate your account: {link}".format(link=confirm_url)
+        send_async_email(to=user_obj.email, subject=subject, message_text=txt, message_html=html,
+                         sender=current_app.config['MAIL_USERNAME'])
+        flash('Your account was successfully created. A link is sent to your email to activate your account.')
         return redirect(url_for('auth.login'))
-
-    # load registration template
-    return render_template('auth.html', form=form, title='Register', view="register")
+    return render_template('auth.html', form=reg_form, title='Register', view="register")
 
 
 # TODO: @auth.route('/verify-email', methods=['GET'])
-@auth.route('/verify-email', methods=['GET'])
-def verify_email():
-    return 'verify email page'
+@auth.route('/verify-email/<token>', methods=['GET'])
+def verify_email(token):
+    try:
+        email = check_email_token(token)
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            raise Exception("Invalid or expired activation link used.")
+        if user.email_confirmed:
+            raise Exception("Invalid or expired activation link used.")
+        user.email_confirmed = True
+        db.session.commit()
+        flash("Account activated succesfully.", "success")
+        return redirect(url_for('auth.login'))
+    except:
+        flash("Invalid or expired activation link used.", "danger")
+        abort(404)
 
 
 # TODO: @auth.route('/reset-password', methods=['GET', 'POST'])

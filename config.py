@@ -5,18 +5,27 @@ class Config(object):
     """
     Common configurations
     """
-    SOFTWARE_VERSION = "b1.0"
+    SOFTWARE_VERSION = "b1.1.0"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     WTF_CSRF_ENABLED = True
 
     BOOTSTRAP_SERVE_LOCAL = True
+    # The available theme names are:
+    # ‘cerulean’, ‘cosmo’, ‘cyborg’, ‘darkly’, ‘flatly’, ‘journal’,
+    # ‘litera’, ‘lumen’, ‘lux’, ‘materia’, ‘minty’, ‘pulse’,
+    # ‘sandstone’, ‘simplex’, ‘sketchy’, ‘slate’, ‘solar’,
+    # ‘spacelab’, ‘superhero’, ‘united’, ‘yeti’.
+    BOOTSTRAP_BOOTSWATCH_THEME = 'lumen'
 
     RECAPTCHA_DATA_ATTRS = {'theme': 'white'}  # 'red' | 'white' | 'blackglass' | 'clean' | 'custom'
 
     EXECUTOR_TYPE = "thread"  # or, process
     EXECUTOR_MAX_WORKERS = 5
+
+
+
 
 
 class DevelopmentConfig(Config):
