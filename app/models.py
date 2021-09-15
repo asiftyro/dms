@@ -14,7 +14,12 @@ class UserType(Enum):
     MERCHANT_OWNER = 1
     MERCHANT_USER = 2
     ADMIN_SUPER = 3
-    ADMIN_USER = 4
+    ADMIN_MANAGER = 4
+    ADMIN_USER = 5
+
+
+MERCHANT_USER_TYPES = [UserType.MERCHANT_OWNER, UserType.MERCHANT_USER]
+ADMIN_USER_TYPES = [UserType.ADMIN_USER, UserType.ADMIN_MANAGER, UserType.ADMIN_SUPER]
 
 
 class OrderStatus(Enum):

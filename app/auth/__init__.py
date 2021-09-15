@@ -1,37 +1,21 @@
 from flask import Blueprint, flash, redirect, render_template, url_for, abort
 from flask_login import login_required, login_user, logout_user, current_user
-import functools
 
+from app import db
 from .form import LoginForm, RegistrationForm
 from ..models import User, UserType, Merchant
-from app import db
+from .roles import merchant_required, admin_required, role_required
 from ..utils import send_async_email
 
 auth = Blueprint('auth', __name__, template_folder='')
 
 
-def merchant_user_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if current_user.user_type not in [UserType.MERCHANT_OWNER, UserType.MERCHANT_USER]:
-            abort(403)
-        return view(**kwargs)
-
-    return wrapped_view
-
-
-def admin_user_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if current_user.user_type in [UserType.MERCHANT_OWNER, UserType.MERCHANT_USER]:
-            abort(403)
-        return view(**kwargs)
-
-    return wrapped_view
-
-
 @auth.route('/login', methods=['GET', 'POST'])
+@role_required(role=None)
 def login():
+
+
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -56,6 +40,7 @@ def logout():
 
 
 @auth.route('/register', methods=['GET', 'POST'])
+@role_required(role=None)
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
