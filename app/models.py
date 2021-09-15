@@ -58,8 +58,7 @@ class User(UserMixin, db.Model):
     merchant_id = db.Column(db.Integer, nullable=False)
     role = db.Column(db.Enum(Role), nullable=False, default=Role.MERCHANT_OWNER)
     active = db.Column(db.Boolean(), nullable=False, default=True)
-    # todo: set email_confirmed default to Fale
-    email_confirmed=db.Column(db.Boolean(), nullable=False, default=True)
+    email_confirmed=db.Column(db.Boolean(), nullable=False, default=False)
 
     # is_admin = db.Column(db.Boolean, default=False)
 
