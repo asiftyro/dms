@@ -48,11 +48,11 @@ def create_app(config_name):
     login_manager.login_message = "You must be logged in to access this page."
     login_manager.login_view = "auth.login"
 
-    from .auth import auth as auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth')
-
     from .home import home as home_bp
     app.register_blueprint(home_bp)
+
+    from .auth import auth as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     from .profile import profile as profile_bp
     app.register_blueprint(profile_bp, url_prefix='/profile')
@@ -60,4 +60,12 @@ def create_app(config_name):
     from .order import order as order_bp
     app.register_blueprint(order_bp, url_prefix='/order')
 
+    from .admin import admin_order as admin_order_bp
+    app.register_blueprint(admin_order_bp, url_prefix='/admin/order')
+
+    from .admin import admin_user as admin_user_bp
+    app.register_blueprint(admin_user_bp, url_prefix='/admin/user')
+
+    from .admin import admin_merchant as admin_merchant_bp
+    app.register_blueprint(admin_merchant_bp, url_prefix='/admin/merchant')
     return app
