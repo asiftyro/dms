@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, url_for, current_app, abort
 from flask_login import login_required, login_user, logout_user, current_user
-
+from datetime import datetime
 from app import db
 from .form import LoginForm, RegistrationForm
 from ..models import User, Role, Merchant
@@ -46,20 +46,28 @@ def logout():
 def register():
     reg_form = RegistrationForm()
     if reg_form.validate_on_submit():
-        merchant = Merchant()
-        db.session.add(merchant)
-        db.session.flush()
         user_obj = User(
             email=reg_form.email.data,
             first_name=reg_form.first_name.data,
             last_name=reg_form.last_name.data,
             password=reg_form.password.data,
-            merchant_id=merchant.id,
             role=Role.MERCHANT_OWNER,
         )
+        db.session.add(user_obj)
+        db.session.flush()
 
+        merchant = Merchant(
+            created_by=user_obj.id,
+            created_at=datetime.now()
+        )
+        db.session.add(merchant)
+        db.session.flush()
+
+        user_obj.merchant_id = merchant.id
+        user_obj.created_by = user_obj.id
         db.session.add(user_obj)
         db.session.commit()
+
         token = get_email_token(email=user_obj.email)
         confirm_url = url_for('auth.verify_email', token=token, _external=True)
         subject = "Activate your Ural account."

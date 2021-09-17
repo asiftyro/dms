@@ -1,25 +1,21 @@
-<!-- app/templates/base.html -->
-
 <!doctype html>
 <html lang="en" class="h-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.5">
+    <meta name="description" content="ural delivery management system">
+    <meta name="author" content="asif r. porosh">
     <title>{% block title %}{% endblock %} - UralDMS {{config.SOFTWARE_VERSION}}</title>
-
-    {% block styles %}
     {{ bootstrap.load_css() }}
-    {% endblock %}
-
-    <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+<!--    <link href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.css" rel="stylesheet">-->
+<!--    <link href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap4.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.11.2/b-2.0.0/b-html5-2.0.0/b-print-2.0.0/datatables.min.css"/>
+
+    {% block styles %}{% endblock %}
 </head>
 <body class="d-flex flex-column h-100">
 <header>
-    <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">Ural DMS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
@@ -70,12 +66,9 @@
     </nav>
 </header>
 
-<!-- Begin page content -->
+
 <main role="main" class="flex-shrink-0">
-    <div class="container-fluid">
-        {% block body %}
-        {% endblock %}
-    </div>
+<div class="container-fluid">{% block body %}{% endblock %}</div>
 </main>
 
 <footer class="footer mt-auto py-3">
@@ -87,8 +80,12 @@
     </div>
 </footer>
 
-{% block scripts %}
+
 {{ bootstrap.load_js() }}
-{% endblock %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.11.2/b-2.0.0/b-html5-2.0.0/b-print-2.0.0/datatables.min.js"></script>
+{% block scripts %}{% endblock %}
+
 </body>
 </html>

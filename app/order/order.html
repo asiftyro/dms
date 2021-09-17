@@ -3,7 +3,7 @@
 {% from 'bootstrap/table.html' import render_table %}
 {% extends "base.html" %}
 
-{% block title %}Order{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block body %}
 <div class="content-section">
@@ -39,20 +39,6 @@
             )
         }}
         {% endif %}
-        <code>
-            <!-- TODO:-->
-            Todo:
-            <br>
-            <del>A table with action buttons to cancel or edit and view details</del>
-            <br>
-            Pagination
-            <br>
-            Search and filters
-            <br>
-            Export
-            <br>
-            <del>Option to add new</del>
-        </code>
     {% endif %}
 
 

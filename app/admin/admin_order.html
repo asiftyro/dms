@@ -1,0 +1,57 @@
+{% from "bootstrap/utils.html" import render_messages %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% from 'bootstrap/table.html' import render_table %}
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block body %}
+<div class="content-section">
+    <div class="common-header">
+        <h3>{{title}}</h3>
+        {{ render_messages(dismissible=True) }}
+    </div>
+
+    <hr>
+    <div>
+        <table id="admin-order-table" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                  <th>Action</th>
+                <th>User ID</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+          <tbody></tbody>
+        </table>
+    </div>
+</div> <!-- .content-section-->
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+      var table = $('#admin-order-table').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "dom": 'Bfrtip',
+        "ajax": "{{ url_for('admin_order.orders') }}",
+        "columnDefs": [
+          {  targets: 0,
+             render: function (data, type, row, meta) {
+                return '<a class="btn btn-sm btn-light" href="{{url_for('admin_order.order')}}edit/'+ data + '">Edit</a>' +
+                '<a class="btn btn-sm btn-light" href="{{url_for('admin_order.order')}}'+ data + '">View</a>'
+             }
+          }
+        ], // columnDefs
+        "buttons": [
+            // 'copy', 'csv', 'excel', 'pdf', 'print'
+            { extend: 'copy', className: 'btn btn-sm btn-light',  exportOptions: {columns: [1, 2]} },
+            { extend: 'csv', className: 'btn btn-sm btn-light' },
+            { extend: 'excel', className: 'btn btn-sm btn-light' },
+            { extend: 'pdf', className: 'btn btn-sm btn-light', exportOptions: {columns: [1, 2]}},
+            { extend: 'print', className: 'btn btn-sm btn-light' },
+        ], // buttons
+      }); // var table
+    }); // doc ready
+  </script>
+{% endblock %}

@@ -2,7 +2,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.dialects.mysql import INTEGER, BIGINT
-
+from sqlalchemy.sql import func
 from app import db, login_manager
 from enum import Enum
 
@@ -55,12 +55,15 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
     password_hash = db.Column(db.String(128))
-    merchant_id = db.Column(db.Integer, nullable=False)
+    merchant_id = db.Column(db.Integer, nullable=True)
     role = db.Column(db.Enum(Role), nullable=False, default=Role.MERCHANT_OWNER)
     active = db.Column(db.Boolean(), nullable=False, default=True)
-    email_confirmed=db.Column(db.Boolean(), nullable=False, default=False)
+    email_confirmed = db.Column(db.Boolean(), nullable=False, default=False)
+    created_by = db.Column(BIGINT(unsigned=True), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+    modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
+    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
 
-    # is_admin = db.Column(db.Boolean, default=False)
 
     @property
     def password(self):
@@ -95,7 +98,8 @@ class User(UserMixin, db.Model):
         return self.role in ADMIN_ROLES
 
     def __repr__(self):
-        return '<User: {}>'.format(self.id)
+        """Give a unambiguous representation of an instance."""
+        return "<{}#{}>".format(self.__class__.__name__, self.id)
 
 
 class Order(db.Model):
@@ -107,12 +111,17 @@ class Order(db.Model):
     id = db.Column(BIGINT(unsigned=True, zerofill=True), primary_key=True)
     merchant_id = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(128), nullable=False)
-    address = db.Column(db.String(128), nullable=False)
+    address = db.Column(db.String(256), nullable=False)
     status = db.Column(db.Enum(OrderStatus), nullable=False, default=OrderStatus.CREATED)
     payment_status = db.Column(db.Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
+    created_by = db.Column(BIGINT(unsigned=True), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+    modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
+    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
 
     def __repr__(self):
-        return '<Order: {}>'.format(self.id)
+        """Give a unambiguous representation of an instance."""
+        return "<{}#{}>".format(self.__class__.__name__, self.id)
 
 
 class Merchant(db.Model):
@@ -121,8 +130,15 @@ class Merchant(db.Model):
     """
     __tablename__ = 'merchants'
     id = db.Column(BIGINT(unsigned=True, zerofill=True), primary_key=True)
-    merchant = db.Column(db.String(128))
+    name = db.Column(db.String(128))
+    address = db.Column(db.String(256))
     active = db.Column(db.Boolean(), nullable=False, default=True)
+    created_by = db.Column(BIGINT(unsigned=True), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+    modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
+    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
+
+
 
     def __repr__(self):
         return '<Merchant: {}>'.format(self.id)

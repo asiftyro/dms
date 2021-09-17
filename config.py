@@ -17,7 +17,7 @@ class Config(object):
     # ‘litera’, ‘lumen’, ‘lux’, ‘materia’, ‘minty’, ‘pulse’,
     # ‘sandstone’, ‘simplex’, ‘sketchy’, ‘slate’, ‘solar’,
     # ‘spacelab’, ‘superhero’, ‘united’, ‘yeti’.
-    BOOTSTRAP_BOOTSWATCH_THEME = 'united'
+    BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
 
     RECAPTCHA_DATA_ATTRS = {'theme': 'white'}  # 'red' | 'white' | 'blackglass' | 'clean' | 'custom'
 
