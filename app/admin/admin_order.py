@@ -38,7 +38,6 @@ def edit(order_id):
         order_obj.status = form.status.data.split('.')[-1]  # todo: redo using actual enum name->value
         order_obj.payment_status = form.payment_status.data.split('.')[-1] # todo: redo using actual enum name->value
         order_obj.modified_by = current_user.id
-        order_obj.modified_at = datetime.now()
         db.session.commit()
         flash('You have successfully edited the Order.', 'success')
         return redirect(url_for('admin_order.order', order_id=order_id))

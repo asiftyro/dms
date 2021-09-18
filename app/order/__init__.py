@@ -67,7 +67,6 @@ def edit_order(order_id=None):
         order_obj.description = form.description.data
         order_obj.address = form.address.data
         order_obj.modified_by = current_user.id
-        order_obj.modified_at = datetime.now()
         db.session.commit()
         flash('You have successfully edited the Order.', 'success')
         return redirect(url_for('order.view_order', order_id=order_id))
@@ -86,7 +85,6 @@ def cancel_order(order_id=None):
     if order_obj.status == OrderStatus.CREATED:
         order_obj.status = OrderStatus.CANCELLED_BY_MERCHANT
         order_obj.modified_by = current_user.id
-        order_obj.modified_at = datetime.now()
         db.session.commit()
         flash('You have successfully Cancelled the Order.', 'success')
         return redirect(url_for('order.view_order', order_id=order_id))

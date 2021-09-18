@@ -5,6 +5,7 @@ from sqlalchemy.dialects.mysql import INTEGER, BIGINT
 from sqlalchemy.sql import func
 from app import db, login_manager
 from enum import Enum
+from datetime import datetime
 
 
 class Role(str, Enum):
@@ -59,10 +60,11 @@ class User(UserMixin, db.Model):
     role = db.Column(db.Enum(Role), nullable=False, default=Role.MERCHANT_OWNER)
     active = db.Column(db.Boolean(), nullable=False, default=True)
     email_confirmed = db.Column(db.Boolean(), nullable=False, default=False)
+    email_confirmed_at = db.Column(db.DateTime(timezone=True), nullable=True)
     created_by = db.Column(BIGINT(unsigned=True), nullable=True)
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.now, nullable=True)
     modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
-    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
+    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=datetime.now)
 
     @property
     def password(self):
@@ -97,7 +99,6 @@ class User(UserMixin, db.Model):
         return self.role in ADMIN_ROLES
 
     def __repr__(self):
-        """Give a unambiguous representation of an instance."""
         return "<{}#{}>".format(self.__class__.__name__, self.id)
 
 
@@ -106,7 +107,6 @@ class Order(db.Model):
     Model for table 'orders'
     """
     __tablename__ = 'orders'
-
     id = db.Column(BIGINT(unsigned=True, zerofill=True), primary_key=True)
     merchant_id = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(128), nullable=False)
@@ -114,12 +114,11 @@ class Order(db.Model):
     status = db.Column(db.Enum(OrderStatus), nullable=False, default=OrderStatus.CREATED)
     payment_status = db.Column(db.Enum(PaymentStatus), nullable=False, default=PaymentStatus.UNPAID)
     created_by = db.Column(BIGINT(unsigned=True), nullable=True)
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.now, nullable=True)
     modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
-    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
+    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=datetime.now)
 
     def __repr__(self):
-        """Give a unambiguous representation of an instance."""
         return "<{}#{}>".format(self.__class__.__name__, self.id)
 
 
@@ -133,12 +132,11 @@ class Merchant(db.Model):
     address = db.Column(db.String(256))
     active = db.Column(db.Boolean(), nullable=False, default=True)
     created_by = db.Column(BIGINT(unsigned=True), nullable=True)
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.now, nullable=True)
     modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
-    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
+    modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=datetime.now)
 
     def __repr__(self):
-        """Give a unambiguous representation of an instance."""
         return "<{}#{}>".format(self.__class__.__name__, self.id)
 
 

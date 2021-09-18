@@ -92,6 +92,7 @@ def verify_email(token):
         if user.email_confirmed:
             raise Exception("Invalid or expired activation link used.")
         user.email_confirmed = True
+        user.email_confirmed_at = datetime.now()
         db.session.commit()
         flash("Account activated succesfully.", "success")
         return redirect(url_for('auth.login'))
