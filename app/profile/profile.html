@@ -1,13 +1,53 @@
-<!-- home.html -->
 {% from "bootstrap/utils.html" import render_messages %}
 {% from 'bootstrap/form.html' import render_form, render_field %}
+{% from 'bootstrap/table.html' import render_table %}
 {% extends "base.html" %}
+
 {% block title %}{{title}}{% endblock %}
+
 {% block body %}
 <div class="content-section">
-  <h3>{{title}}</h3>
-  <blockquote class="blockquote">
-  <p class="mb-0">উইড়া উইড়া আইও...</p>
-</blockquote>
+
+    <div class="common-header">
+        <h3>{{title}}</h3>
+        {{ render_messages(dismissible=True) }}
+    </div>
+    <hr>
+
+    {% if view == 'single' %}
+        <div>
+            <a href="{{ url_for('profile.edit') }}" class="btn btn-warning btn-sm" role="button" aria-pressed="true">
+                Edit
+            </a>
+        </div>
+        <hr>
+        <div>
+            <dl class="row">
+                <dt class="col-sm-3">Merchant ID</dt>
+                <dd class="col-sm-9">{{data.id}}</dd>
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">{{data.name}}</dd>
+                <dt class="col-sm-3">Address</dt>
+                <dd class="col-sm-9">{{data.address}}</dd>
+            </dl>
+        </div>
+    {% endif %}
+
+
+
+    {% if view == 'edit' %}
+        <div>
+            <a href="{{ url_for('profile.view') }}"
+               class="btn btn-warning btn-sm" role="button" aria-pressed="true">
+                Cancel Editing
+            </a>
+        </div>
+        <hr>
+        {% if form %}
+            <div>
+                {{ render_form(form, form_type='horizontal', horizontal_columns=('lg', 1, 4)) }}
+            </div>
+        {% endif %}
+    {% endif %}
 </div>
 {% endblock %}

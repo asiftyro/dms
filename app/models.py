@@ -138,7 +138,8 @@ class Merchant(db.Model):
     modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
 
     def __repr__(self):
-        return '<Merchant: {}>'.format(self.id)
+        """Give a unambiguous representation of an instance."""
+        return "<{}#{}>".format(self.__class__.__name__, self.id)
 
 
 # Set up user_loader

@@ -24,15 +24,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
+<!--                <li class="nav-item active">-->
+<!--                    <a class="nav-link" href="/">Home</a>-->
+<!--                </li>-->
 
                 {% if current_user.is_authenticated %}
-                    {% if current_user.role|string() in ['MERCHANT_OWNER', 'MERCHANT_USER'] %}
+                    {% if current_user.role|string() in ['MERCHANT_OWNER'] %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('profile.view_profile') }}">Profile</a>
+                            <a class="nav-link" href="{{ url_for('profile.view') }}">Merchant Profile</a>
                         </li>
+                    {% endif %}
+                    {% if current_user.role|string() in ['MERCHANT_OWNER', 'MERCHANT_USER'] %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('order.view_order') }}">Order</a>
                         </li>
