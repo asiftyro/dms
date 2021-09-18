@@ -19,6 +19,7 @@ class Config(object):
     # ‘spacelab’, ‘superhero’, ‘united’, ‘yeti’.
     BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo'
 
+    RECAPTCHA_ENABLED = False
     RECAPTCHA_DATA_ATTRS = {'theme': 'white'}  # 'red' | 'white' | 'blackglass' | 'clean' | 'custom'
 
     EXECUTOR_TYPE = "thread"  # or, process
@@ -40,7 +41,6 @@ class ProductionConfig(Config):
     Production configurations
     """
     SQLALCHEMY_ECHO = False
-
 
 app_config = {
     'development': DevelopmentConfig,

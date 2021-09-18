@@ -15,8 +15,8 @@ auth = Blueprint('auth', __name__, template_folder='')
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        user = User.query.filter_by(email=login_form.email.data).first()
-        if user is not None and user.verify_password(login_form.password.data):
+        user = User.query.filter_by(email=login_form.user_email.data).first()
+        if user is not None and user.verify_password(login_form.user_password.data):
             if not user.is_email_confirmed():
                 fmsg = "Your account is not active. Please click the activation link sent to your email to activate " \
                        "your account. "
@@ -25,6 +25,7 @@ def login():
             if user.is_active():
                 login_user(user)
                 flash('Login Succesful. Welcome!', 'success')
+                # TODO: change redirection based on logged in user role.
                 return redirect(url_for('home.homepage'))
             else:
                 flash("Account is not active. Contact Administrator", "danger")

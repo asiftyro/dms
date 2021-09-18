@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 0a6024104653
+Revision ID: e2f1f2d6e1db
 Revises: 
-Create Date: 2021-09-17 19:45:42.954655
+Create Date: 2021-09-17 23:05:47.285707
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '0a6024104653'
+revision = 'e2f1f2d6e1db'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('name', sa.String(length=128), nullable=True),
     sa.Column('address', sa.String(length=256), nullable=True),
     sa.Column('active', sa.Boolean(), nullable=False),
-    sa.Column('created_by', mysql.BIGINT(unsigned=True), nullable=False),
+    sa.Column('created_by', mysql.BIGINT(unsigned=True), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.Column('modified_by', mysql.BIGINT(unsigned=True), nullable=True),
     sa.Column('modified_at', sa.DateTime(timezone=True), nullable=True),
@@ -31,12 +31,12 @@ def upgrade():
     )
     op.create_table('orders',
     sa.Column('id', mysql.BIGINT(unsigned=True, zerofill=True), nullable=False),
-    sa.Column('merchant_id', sa.Integer(), nullable=True),
+    sa.Column('merchant_id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=128), nullable=False),
     sa.Column('address', sa.String(length=256), nullable=False),
     sa.Column('status', sa.Enum('CREATED', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_ADMIN', 'PROCESSING', 'SHIPPED', 'RECEIVED', 'RETURNED_BY_CUSTOMER', 'RETURNED_BY_ADMIN', name='orderstatus'), nullable=False),
     sa.Column('payment_status', sa.Enum('UNPAID', 'PAID', name='paymentstatus'), nullable=False),
-    sa.Column('created_by', mysql.BIGINT(unsigned=True), nullable=False),
+    sa.Column('created_by', mysql.BIGINT(unsigned=True), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.Column('modified_by', mysql.BIGINT(unsigned=True), nullable=True),
     sa.Column('modified_at', sa.DateTime(timezone=True), nullable=True),
@@ -48,11 +48,11 @@ def upgrade():
     sa.Column('first_name', sa.String(length=60), nullable=True),
     sa.Column('last_name', sa.String(length=60), nullable=True),
     sa.Column('password_hash', sa.String(length=128), nullable=True),
-    sa.Column('merchant_id', sa.Integer(), nullable=False),
+    sa.Column('merchant_id', sa.Integer(), nullable=True),
     sa.Column('role', sa.Enum('MERCHANT_OWNER', 'MERCHANT_USER', 'ADMIN_SUPER', 'ADMIN_MANAGER', 'ADMIN_USER', name='role'), nullable=False),
     sa.Column('active', sa.Boolean(), nullable=False),
     sa.Column('email_confirmed', sa.Boolean(), nullable=False),
-    sa.Column('created_by', mysql.BIGINT(unsigned=True), nullable=False),
+    sa.Column('created_by', mysql.BIGINT(unsigned=True), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.Column('modified_by', mysql.BIGINT(unsigned=True), nullable=True),
     sa.Column('modified_at', sa.DateTime(timezone=True), nullable=True),

@@ -7,41 +7,41 @@ from app import db, login_manager
 from enum import Enum
 
 
-class Role(Enum):
+class Role(str, Enum):
     """
     Type of users
     """
-    MERCHANT_OWNER = 1
-    MERCHANT_USER = 2
-    ADMIN_SUPER = 3
-    ADMIN_MANAGER = 4
-    ADMIN_USER = 5
+    MERCHANT_OWNER = 'MERCHANT_OWNER'
+    MERCHANT_USER = 'MERCHANT_USER'
+    ADMIN_SUPER = 'ADMIN_SUPER'
+    ADMIN_MANAGER = 'ADMIN_MANAGER'
+    ADMIN_USER = 'ADMIN_USER'
 
 
 MERCHANT_ROLES = [Role.MERCHANT_OWNER, Role.MERCHANT_USER]
 ADMIN_ROLES = [Role.ADMIN_USER, Role.ADMIN_MANAGER, Role.ADMIN_SUPER]
 
 
-class OrderStatus(Enum):
+class OrderStatus(str, Enum):
     """
     Status of orders
     """
-    CREATED = 1
-    CANCELLED_BY_MERCHANT = 2
-    CANCELLED_BY_ADMIN = 3
-    PROCESSING = 4
-    SHIPPED = 5
-    RECEIVED = 6
-    RETURNED_BY_CUSTOMER = 7
-    RETURNED_BY_ADMIN = 7
+    CREATED = 'CREATED'
+    CANCELLED_BY_MERCHANT = 'CANCELLED_BY_MERCHANT'
+    CANCELLED_BY_ADMIN = 'CANCELLED_BY_ADMIN'
+    PROCESSING = 'PROCESSING'
+    SHIPPED = 'SHIPPED'
+    RECEIVED = 'RECEIVED'
+    RETURNED_BY_CUSTOMER = 'RETURNED_BY_CUSTOMER'
+    RETURNED_BY_ADMIN = 'RETURNED_BY_ADMIN'
 
 
-class PaymentStatus(Enum):
+class PaymentStatus(str, Enum):
     """
     Payment status of orders
     """
-    UNPAID = 0
-    PAID = 1
+    UNPAID = 'UNPAID'
+    PAID = 'PAID'
 
 
 class User(UserMixin, db.Model):
@@ -63,7 +63,6 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
     modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
     modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
-
 
     @property
     def password(self):
@@ -137,8 +136,6 @@ class Merchant(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
     modified_by = db.Column(BIGINT(unsigned=True), nullable=True)
     modified_at = db.Column(db.DateTime(timezone=True), nullable=True, onupdate=func.now(), )
-
-
 
     def __repr__(self):
         return '<Merchant: {}>'.format(self.id)

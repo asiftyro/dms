@@ -6,5 +6,7 @@ admin_merchant = Blueprint('admin_merchant', __name__, template_folder='')
 
 
 @admin_merchant.route('/', methods=['GET'])
-def view():
-    return "admin view merchant"
+def merchant():
+    return render_template('admin_merchant.html', title='Manage Merchants')
+
+

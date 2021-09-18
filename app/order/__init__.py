@@ -5,7 +5,7 @@ import functools
 from flask import abort
 
 from app import db
-from ..models import Order, OrderStatus, PaymentStatus, User, Role
+from ..models import Order, OrderStatus, PaymentStatus, User, Role, MERCHANT_ROLES
 from .forms import OrderCreateForm, OrderEditForm
 
 from ..auth import merchant_required, admin_required, role_required
@@ -16,7 +16,7 @@ order = Blueprint('order', __name__, template_folder='')
 @order.route('/', methods=['GET'])
 @order.route('/<int:order_id>', methods=['GET'])
 @login_required
-@role_required(role=[Role.MERCHANT_USER, Role.MERCHANT_OWNER])
+@role_required(role=MERCHANT_ROLES)
 def view_order(order_id=None):
     data = None
     if order_id is None:
@@ -33,7 +33,7 @@ def view_order(order_id=None):
 
 @order.route('/add', methods=['GET', 'POST'])
 @login_required
-@role_required(role=[Role.MERCHANT_USER, Role.MERCHANT_OWNER])
+@role_required(role=MERCHANT_ROLES)
 def add_order():
     form = OrderCreateForm()
     if form.validate_on_submit():
@@ -53,7 +53,7 @@ def add_order():
 
 @order.route('/edit/<int:order_id>', methods=['GET', 'POST'])
 @login_required
-@role_required(role=[Role.MERCHANT_USER, Role.MERCHANT_OWNER])
+@role_required(role=MERCHANT_ROLES)
 def edit_order(order_id=None):
     order_obj = Order.query.filter_by(merchant_id=current_user.merchant_id, id=order_id).first()
     if order_obj is None:
@@ -76,7 +76,7 @@ def edit_order(order_id=None):
 
 @order.route('/cancel/<int:order_id>', methods=['POST'])
 @login_required
-@role_required(role=[Role.MERCHANT_USER, Role.MERCHANT_OWNER])
+@role_required(role=MERCHANT_ROLES)
 def cancel_order(order_id=None):
     order_obj = Order.query.filter_by(merchant_id=current_user.merchant_id, id=order_id).first()
     if order_obj is None:

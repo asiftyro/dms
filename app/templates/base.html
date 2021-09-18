@@ -25,11 +25,11 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/">Home</a>
                 </li>
 
                 {% if current_user.is_authenticated %}
-                    {% if current_user.role|string() in ['Role.MERCHANT_OWNER', 'Role.MERCHANT_USER'] %}
+                    {% if current_user.role|string() in ['MERCHANT_OWNER', 'MERCHANT_USER'] %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('profile.view_profile') }}">Profile</a>
                         </li>
@@ -41,13 +41,10 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('profile.view_profile') }}">Adm Profile</a>
+                            <a class="nav-link" href="{{ url_for('admin_order.order') }}">Manage Order</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('order.view_order') }}">Adm Order</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('order.add_order') }}">Adm New Order</a>
+                            <a class="nav-link" href="{{ url_for('admin_merchant.merchant') }}">Manage Merchant</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">
@@ -75,7 +72,8 @@
     <div class="container">
         <span class="text-muted">&copy;&nbsp;2021&nbsp;uira.io</span>
         {% if current_user.is_authenticated %}
-        <span class="text-muted float-right">Logged in: {{current_user.email}} | {{current_user.role|string()}}</span>
+        {# url_for(request.endpoint, **request.view_args) #}
+        <span class="text-muted float-right">Logged in: {{current_user.email|string()}} | {{current_user.role|string()}}</span>
         {% endif %}
     </div>
 </footer>

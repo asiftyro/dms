@@ -3,7 +3,7 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import PasswordField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-
+from config import Config
 from ..models import User
 
 
@@ -19,7 +19,9 @@ class RegistrationForm(FlaskForm):
         EqualTo('confirm_password')
     ])
     confirm_password = PasswordField('Confirm Password')
-    recaptcha = RecaptchaField()
+    # TODO: load config from instance if instance exist, otherwise use Config default
+    if Config.RECAPTCHA_ENABLED:
+        recaptcha = RecaptchaField()
     submit = SubmitField('Register')
 
     def validate_email(self, field):
@@ -31,7 +33,10 @@ class LoginForm(FlaskForm):
     """
     Form for users to login
     """
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    recaptcha = RecaptchaField()
+
+    user_email = StringField('Email', validators=[DataRequired(), Email()])
+    user_password = PasswordField('Password', validators=[DataRequired()])
+    # TODO: load config from instance if instance exist, otherwise use Config default
+    if Config.RECAPTCHA_ENABLED:
+        recaptcha = RecaptchaField()
     submit = SubmitField('Login')
