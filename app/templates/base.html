@@ -8,6 +8,7 @@
     <title>{% block title %}{% endblock %} - UralDMS {{config.SOFTWARE_VERSION}}</title>
     {{ bootstrap.load_css() }}
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!--    <link href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.css" rel="stylesheet">-->
 <!--    <link href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap4.min.css" rel="stylesheet">-->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.11.2/b-2.0.0/b-html5-2.0.0/b-print-2.0.0/datatables.min.css"/>
@@ -31,7 +32,7 @@
                 {% if current_user.is_authenticated %}
                     {% if current_user.role|string() in ['MERCHANT_OWNER'] %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('profile.view') }}">Merchant Profile</a>
+                            <a class="nav-link" href="{{ url_for('profile.read') }}">Merchant Profile</a>
                         </li>
                     {% endif %}
                     {% if current_user.role|string() in ['MERCHANT_OWNER', 'MERCHANT_USER'] %}

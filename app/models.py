@@ -127,9 +127,40 @@ class Merchant(db.Model):
     Merchant model
     """
     __tablename__ = 'merchants'
+
     id = db.Column(BIGINT(unsigned=True, zerofill=True), primary_key=True)
+
     name = db.Column(db.String(128))
-    address = db.Column(db.String(256))
+    trade_license = db.Column(db.String(256))
+    tnc = db.Column(BIGINT(unsigned=True), nullable=True)
+    rate = db.Column(BIGINT(unsigned=True), nullable=True)
+    website = db.Column(db.String(256))
+    facebook = db.Column(db.String(256))
+
+    contact_name = db.Column(db.String(128))
+    contact_designation = db.Column(db.String(128))
+    contact_address = db.Column(db.String(256))
+    contact_telephone = db.Column(db.String(32))
+    contact_email = db.Column(db.String(128))
+
+    alt_contact_name = db.Column(db.String(128))
+    alt_contact_designation = db.Column(db.String(128))
+    alt_contact_address = db.Column(db.String(256))
+    alt_contact_telephone = db.Column(db.String(32))
+    alt_contact_email = db.Column(db.String(128))
+
+    collection_contact_name = db.Column(db.String(128))
+    collection_contact_designation = db.Column(db.String(128))
+    collection_contact_address = db.Column(db.String(256))
+    collection_contact_telephone = db.Column(db.String(32))
+    collection_contact_email = db.Column(db.String(128))
+
+    billing_contact_name = db.Column(db.String(128))
+    billing_contact_designation = db.Column(db.String(128))
+    billing_contact_address = db.Column(db.String(256))
+    billing_contact_telephone = db.Column(db.String(32))
+    billing_contact_email = db.Column(db.String(128))
+
     active = db.Column(db.Boolean(), nullable=False, default=True)
     created_by = db.Column(BIGINT(unsigned=True), nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.now, nullable=True)

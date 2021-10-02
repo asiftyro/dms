@@ -12,42 +12,195 @@
         <h3>{{title}}</h3>
         {{ render_messages(dismissible=True) }}
     </div>
-    <hr>
 
-    {% if view == 'single' %}
-        <div>
-            <a href="{{ url_for('profile.edit') }}" class="btn btn-warning btn-sm" role="button" aria-pressed="true">
-                Edit
+    <div class="mt-4">
+        <ul class="nav nav-tabs">
+            {% for page in profile_pages %}
+                {% set active_class = 'active' if view == page else '' %}
+                <li class="nav-item">
+                    <a class="nav-link {{active_class}} text-capitalize font-weight-bold"
+                       href="{{ url_for('profile.read', page=page) }}">
+                        {{page}}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="mt-4">
+        {% if edit %}
+            <a class="btn btn-sm btn-secondary" href="{{ url_for('profile.read', page=view) }}">
+                <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;Cancel Editing&nbsp;
             </a>
-        </div>
-        <hr>
-        <div>
-            <dl class="row">
-                <dt class="col-sm-3">Merchant ID</dt>
-                <dd class="col-sm-9">{{data.id}}</dd>
-                <dt class="col-sm-3">Name</dt>
-                <dd class="col-sm-9">{{data.name}}</dd>
-                <dt class="col-sm-3">Address</dt>
-                <dd class="col-sm-9">{{data.address}}</dd>
-            </dl>
-        </div>
-    {% endif %}
-
-
-
-    {% if view == 'edit' %}
-        <div>
-            <a href="{{ url_for('profile.view') }}"
-               class="btn btn-warning btn-sm" role="button" aria-pressed="true">
-                Cancel Editing
+        {% else %}
+            <a class="btn btn-sm btn-primary" href="{{ url_for('profile.update', page=view) }}">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit&nbsp;
             </a>
-        </div>
-        <hr>
-        {% if form %}
-            <div>
-                {{ render_form(form, form_type='horizontal', horizontal_columns=('lg', 1, 4)) }}
-            </div>
         {% endif %}
-    {% endif %}
-</div>
+    </div>
+
+
+    <div class="mt-4">
+        {% if not edit %}
+            {% if view=='primary' %}
+                <dl class="row">
+                    <dt class="col-sm-3">Merchant ID</dt>
+                    <dd class="col-sm-9">{{data.id}}</dd>
+                    <dt class="col-sm-3">Merchant comapny Name</dt>
+                    <dd class="col-sm-9">{{data.name}}</dd>
+                    <dt class="col-sm-3">Trade License</dt>
+                    <dd class="col-sm-9">{{data.trade_license}}</dd>
+                    <dt class="col-sm-3">Website</dt>
+                    <dd class="col-sm-9">{{data.website}}</dd>
+                    <dt class="col-sm-3">Facebook</dt>
+                    <dd class="col-sm-9">{{data.facebook}}</dd>
+                    <dt class="col-sm-3"><hr></dt>
+                    <dd class="col-sm-9">&nbsp;</dd>
+                    <dt class="col-sm-3">Primary contact's Name</dt>
+                    <dd class="col-sm-9">{{data.contact_name}}</dd>
+                    <dt class="col-sm-3">Primary contact's designation/title</dt>
+                    <dd class="col-sm-9">{{data.contact_designation}}</dd>
+                    <dt class="col-sm-3">Primary contact's address</dt>
+                    <dd class="col-sm-9">{{data.contact_address}}</dd>
+                    <dt class="col-sm-3">Primary contacts's mobile/telephone</dt>
+                    <dd class="col-sm-9">{{data.contact_telephone}}</dd>
+                    <dt class="col-sm-3">Primary contacts's email</dt>
+                    <dd class="col-sm-9">{{data.contact_email}}</dd>
+                    <dt class="col-sm-3"><hr></dt>
+                    <dd class="col-sm-9">&nbsp;</dd>
+                    <dt class="col-sm-3">Alternative contact's Name</dt>
+                    <dd class="col-sm-9">{{data.alt_contact_name}}</dd>
+                    <dt class="col-sm-3">Alternative contact's designation/title</dt>
+                    <dd class="col-sm-9">{{data.alt_contact_designation}}</dd>
+                    <dt class="col-sm-3">Alternative contact's address</dt>
+                    <dd class="col-sm-9">{{data.alt_contact_address}}</dd>
+                    <dt class="col-sm-3">Alternative contacts's mobile/telephone</dt>
+                    <dd class="col-sm-9">{{data.alt_contact_telephone}}</dd>
+                    <dt class="col-sm-3">Alternative contacts's email</dt>
+                    <dd class="col-sm-9">{{data.alt_contact_email}}</dd>
+                </dl>
+            {% elif view=='contacts' %}
+                <dl class="row">
+                    <dt class="col-sm-3">Billing contact's Name</dt>
+                    <dd class="col-sm-9">{{data.billing_contact_name}}</dd>
+                    <dt class="col-sm-3">Billing contact's designation/title</dt>
+                    <dd class="col-sm-9">{{data.billing_contact_designation}}</dd>
+                    <dt class="col-sm-3">Billing contact's address</dt>
+                    <dd class="col-sm-9">{{data.billing_contact_address}}</dd>
+                    <dt class="col-sm-3">Billing contacts's mobile/telephone</dt>
+                    <dd class="col-sm-9">{{data.billing_contact_telephone}}</dd>
+                    <dt class="col-sm-3">Billing contacts's email</dt>
+                    <dd class="col-sm-9">{{data.billing_contact_email}}</dd>
+                    <dt class="col-sm-3"><hr></dt>
+                    <dd class="col-sm-9">&nbsp;</dd>
+                    <dt class="col-sm-3">Collection/Pickup point contact's Name</dt>
+                    <dd class="col-sm-9">{{data.collection_contact_name}}</dd>
+                    <dt class="col-sm-3">Collection/Pickup point contact's designation/title</dt>
+                    <dd class="col-sm-9">{{data.collection_contact_designation}}</dd>
+                    <dt class="col-sm-3">Collection/Pickup point contact's address</dt>
+                    <dd class="col-sm-9">{{data.collection_contact_address}}</dd>
+                    <dt class="col-sm-3">Collection/Pickup point contacts's mobile/telephone</dt>
+                    <dd class="col-sm-9">{{data.collection_contact_telephone}}</dd>
+                    <dt class="col-sm-3">Collection/Pickup point contacts's email</dt>
+                    <dd class="col-sm-9">{{data.collection_contact_email}}</dd>
+                </dl>
+            {% elif view=='tnc' %}
+                <div>
+                    <h3>
+                        Terms and Condition of Service
+                    </h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse lacinia vel nibh ac consectetur. Sed eu posuere quam. Fusce consequat massa vitae eros viverra, at lobortis lacus fringilla. Mauris velit risus, viverra et nisl sed, rhoncus tempor nisi. Maecenas rutrum ante enim, eu placerat tellus faucibus rhoncus. Proin enim nisi, interdum sed lorem in, tempor aliquam ex. Suspendisse potenti. Proin ut quam et odio tincidunt cursus nec et turpis.</p>
+                    <p>Morbi aliquet leo nunc, ut vestibulum nibh scelerisque at. Maecenas ut mauris sem. Proin ultricies metus et massa malesuada, ac dictum leo commodo. Quisque sed nunc nec eros facilisis finibus nec in turpis. Integer sed sagittis ex. Praesent convallis maximus bibendum. Sed luctus tortor sit amet purus finibus sagittis. Nulla facilisi. Aliquam gravida auctor suscipit. Quisque eget quam eget felis aliquet feugiat nec sit amet massa. Etiam eu volutpat lorem. Ut sit amet lobortis lorem, a aliquam tortor. Nunc in nisi sed augue pellentesque facilisis ac eget urna. Praesent lobortis eleifend justo id vulputate.</p>
+                    <p>Donec volutpat vel quam et iaculis. Vivamus quis nisi a magna convallis fermentum. Nullam egestas tortor auctor dui semper vehicula. Etiam aliquam eleifend nunc sed efficitur. Etiam a mauris in mauris sagittis suscipit nec eget quam. Curabitur semper dapibus sem, nec fringilla diam dictum vitae. Fusce elementum nulla nec ornare interdum. Suspendisse iaculis dolor a nulla volutpat feugiat. Sed et suscipit ante, mollis blandit urna. Maecenas facilisis iaculis pretium. Morbi consequat eros sit amet ultricies rhoncus.</p>
+                    <p>Nullam vitae felis aliquet, commodo massa non, imperdiet diam. Mauris varius leo nec sem posuere commodo. Praesent facilisis commodo dolor, eu faucibus purus suscipit non. Aliquam erat volutpat. Nunc efficitur leo non vehicula semper. Curabitur venenatis nisi ac nunc tempus, quis scelerisque augue convallis. Aliquam et justo vitae purus eleifend maximus eleifend in lorem. Vivamus rhoncus sapien ut erat luctus condimentum. Etiam at scelerisque quam.</p>
+
+                    <dl class="row mt-4">
+                        <dt class="col-sm-3">TnC Agreement Status</dt>
+                        <dd class="col-sm-9">Not Agreed</dd>
+                        <dt class="col-sm-3">TnC Agreed By</dt>
+                        <dd class="col-sm-9">Name of User</dd>
+                        <dt class="col-sm-3">TnC Agreement On</dt>
+                        <dd class="col-sm-9">ISO Date</dd>
+                    </dl>
+                </div>
+            {% elif view=='rate' %}
+                <div>
+                    <h3>
+                        Rates
+                    </h3>
+
+                    <table class="table table-hover table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Charge Taka Upto 1Kg</th>
+                                <th>Charge Taka 1Kg to 2Kg</th>
+                                <th>Charge Taka per Kg after 2Kg</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Inside Dhaka</td>
+                                <td>60</td>
+                                <td>75</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>Outside Dhaka</td>
+                                <td>100</td>
+                                <td>130</td>
+                                <td>20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <dl class="row mt-4">
+                        <dt class="col-sm-3">Rate Agreement Status</dt>
+                        <dd class="col-sm-9">Not Agreed</dd>
+                        <dt class="col-sm-3">Rate Agreed By</dt>
+                        <dd class="col-sm-9">Name of User</dd>
+                        <dt class="col-sm-3">Rate Agreement On</dt>
+                        <dd class="col-sm-9">ISO Date</dd>
+                    </dl>
+                </div>
+            {% elif view=='document' %}
+                    <h3>
+                        Documents
+                    </h3>
+
+                    <table class="table table-hover table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Uploaded At</th>
+                                <th>Uploaded by</th>
+                                <th>Document description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Logo</td>
+                                <td>2021-09-17 23:10:44</td>
+                                <td>asif.testbox+merchant01@gmail.com</td>
+                                <td>Logo of the company</td>
+                            </tr>
+                            <tr>
+                                <td>Trade License</td>
+                                <td>2021-10-17 2:10:04</td>
+                                <td>sif.testbox+merchant01@gmail.com</td>
+                                <td>Copy of Trade License</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            {% endif %}
+        {% else %}
+            {% if view=='primary' %}
+                {{ render_form(form, form_type='horizontal', horizontal_columns=('lg', 2, 3)) }}
+            {% elif view=='contacts' %}
+                {{ render_form(form, form_type='horizontal', horizontal_columns=('lg', 2, 3)) }}
+            {% endif %}
+        {% endif %}
+    </div>
+
+
+</div> <!--content-section-->
 {% endblock %}
